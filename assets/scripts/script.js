@@ -2,9 +2,10 @@
 // Global Declarations
 // -------------------------------------------------------------
 class ForecastDay {
-    constuctor( city, conditions, date, temp, wind, humidity){
+    constuctor( city, conditions, icon, date, temp, wind, humidity){
         this.city = city;
         this.conditions = conditions;
+        this.icon = icon;
         this.dateTime = date;
         this.temp = temp;
         this.wind = wind;
@@ -21,7 +22,7 @@ const countryCode = 'US';
 
 fetchWeatherData(city, countryCode, openWeatheMapApiKey)
     .then(data => displayForecast(data))
-    .catch(error => console.error('An error occurred:', error));
+    .catch(error => alert('No forecast for that city'));
 
 // Function to fetch weather data from OpenWeatherMap API
 async function fetchWeatherData(city, countryCode, apiKey) {
@@ -45,18 +46,18 @@ function displayForecast(forecastData) {
     }
 
     // Iterate through each forecast entry
-    console.log(forecastData);
-    
     forecast = [];
     forecastData.list.forEach(entry => {
         var day = new ForecastDay();
         
         day.city = forecastData.city.name;
         day.dateTime = dayjs(entry.dt_txt);
-        day.temp = entry.main.temp + "&#176;F";
+        day.temp = entry.main.temp;
         day.wind = entry.wind.speed + " mph";
         day.humidity = entry.main.humidity + "%";
-        day.conditions = entry.weather[0].main;
+        day.conditions =  entry.weather[0].description;
+        day.icon = `https://openweathermap.org/img/wn/${entry.weather[0].icon}@2x.png`;
+        //console.log( `https://openweathermap.org/img/wn/${entry.weather[0].icon}@2x.png` );
         
         forecast.push(day);    
         
@@ -67,18 +68,27 @@ function displayForecast(forecastData) {
     
     for (var i =0 ; i <6 ; i++){
         selectForecast[i] = getDayForecast( dayjs().add(i, 'day'));
-        //console.log( selectForecast[i]);
     }
     
     // Update controls
     $("#cityName").text(forecastData.city.name);
     
     var days = $(".dayDate");
+    var icon = $(".icon");
     var temp = $(".temp");
     var wind = $(".wind");
-    var humitity = $(".temp");
+    var humitity = $(".humitity");
 
-    
+    days.each(function(index) {
+        $(this).text(selectForecast[index].dateTime.format('MM/DD/YYYY'));
+      });
+
+    icon.each(function(index) {
+        $(this).text(attr('src', selectForecast[index].icon));
+        console.log(selectForecast[index].icon);
+        
+      });
+
     temp.each(function(index) {
         $(this).text(selectForecast[index].temp);
       });
@@ -88,10 +98,8 @@ function displayForecast(forecastData) {
       });
 
       humitity.each(function(index) {
-        $(this).text(selectForecast[index].humitity);
+        $(this).text(selectForecast[index].humidity);
       });
-
-
     
 }
 
@@ -111,5 +119,24 @@ function getDayForecast(dateMatch){
     });
 
     return day;
-
 }
+
+// Wait for the document to be ready before processing button clicks
+$(document).ready( function(){
+    
+
+    $(".preset").click(function() {
+        fetchWeatherData($(this).text(), countryCode, openWeatheMapApiKey)
+          .then(data => displayForecast(data))
+          .catch(error => alert('No forecast for that city'));
+          $("#searchText").val($(this).text());
+    });
+    $(".searchButton").click(function() {
+        fetchWeatherData($("#searchText").val(), countryCode, openWeatheMapApiKey)
+        .then(data => displayForecast(data))
+        .catch(error => alert('No forecast for that city'));
+        
+               
+       });
+});
+

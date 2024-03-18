@@ -20,7 +20,6 @@ header {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  border: 2px red solid;
   width: 100vw;
 }
 
@@ -31,7 +30,7 @@ header {
   flex-wrap: wrap;
   flex-direction: column;
   margin: 5px;
-  border: 2px blue solid;
+  
   
 }
 
@@ -42,7 +41,7 @@ header {
   flex-wrap: wrap;
   flex-direction: column;
   margin: 5px;
-  border: 2px green solid;
+  
   
 }
 
@@ -53,17 +52,17 @@ header {
   flex-wrap: wrap;
   flex-direction: column;
   padding: 5px;
-  border: 2px black solid;
+  
   
 }
 
-.forcast {
+.forecast {
   background-color: white;
   color: black;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  border: 2px black solid;
+  
   
 }
 
@@ -75,5 +74,6 @@ header {
 }
 
 .search {
-  
+
+
 }
