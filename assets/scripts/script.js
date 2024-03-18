@@ -18,11 +18,14 @@ var forecast = [];
 const openWeatheMapApiKey = '7b85f2bb86fc3cfd4942d30f29f7e19d';
 const city = 'Seattle';
 const countryCode = 'US';
+const appName = "TroveWeather";
 
-
-fetchWeatherData(city, countryCode, openWeatheMapApiKey)
-    .then(data => displayForecast(data))
-    .catch(error => alert('No forecast for that city'));
+// -------------------------------------------------------------
+// Functions
+// -------------------------------------------------------------
+//fetchWeatherData(city, countryCode, openWeatheMapApiKey)
+//    .then(data => displayForecast(data))
+    //.catch(error => alert('No forecast for that city'));
 
 // Function to fetch weather data from OpenWeatherMap API
 async function fetchWeatherData(city, countryCode, apiKey) {
@@ -31,6 +34,8 @@ async function fetchWeatherData(city, countryCode, apiKey) {
     try {
         const response = await fetch(apiUrl);
         const data = await response.json();
+        localStorage.setItem(appName, JSON.stringify(city)); // save last search value
+
         return data;
     } catch (error) {
         console.error('Error fetching weather data:', error);
@@ -123,6 +128,19 @@ function getDayForecast(dateMatch){
 // Wait for the document to be ready before processing button clicks
 $(document).ready( function(){
     
+    //set to last user city
+    var city = JSON.parse( localStorage.getItem(appName));
+
+    if ( city ) {
+        $("#searchText").val(city);
+    } else {
+        $("#searchText").val("Portland");
+    }
+
+    fetchWeatherData($("#searchText").val(), countryCode, openWeatheMapApiKey)
+        .then(data => displayForecast(data))
+        .catch(error => alert('No forecast for that city'));
+    
 
     $(".preset").click(function() {
         fetchWeatherData($(this).text(), countryCode, openWeatheMapApiKey)
@@ -130,10 +148,11 @@ $(document).ready( function(){
           .catch(error => alert('No forecast for that city'));
           $("#searchText").val($(this).text());
     });
+
     $(".searchButton").click(function() {
         fetchWeatherData($("#searchText").val(), countryCode, openWeatheMapApiKey)
-        .then(data => displayForecast(data))
-        .catch(error => alert('No forecast for that city'));
+            .then(data => displayForecast(data))
+            .catch(error => alert('No forecast for that city'));
         
                
        });

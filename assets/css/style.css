@@ -1,7 +1,11 @@
+/* Trove Weather CSS */
+
+
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
 }
+
 
 header {
   background-color: black;
@@ -14,6 +18,7 @@ header {
   padding: 20px;
 }
 
+/* Conatiner logic */
 .container {
   background-color: white;
   color: black;
@@ -30,8 +35,6 @@ header {
   flex-wrap: wrap;
   flex-direction: column;
   margin: 5px;
-  
-  
 }
 
 .results {
@@ -41,39 +44,19 @@ header {
   flex-wrap: wrap;
   flex-direction: column;
   margin: 5px;
-  
-  
 }
 
-.results {
-  background-color: white;
-  color: black;
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  padding: 5px;
-  
-  
-}
-
+/*  forecast is for 6 days with main windows and 5 cards */
 .forecast {
   background-color: white;
   color: black;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  
-  
 }
 
 .card {
   background-color: blue;
   color: white;
-
   margin: 3px;
-}
-
-.search {
-
-
 }
