@@ -5,14 +5,14 @@ class ForecastDay {
     constuctor( city, conditions, date, temp, wind, humidity){
         this.city = city;
         this.conditions = conditions;
-        this.date = date;
+        this.dateTime = date;
         this.temp = temp;
         this.wind = wind;
         this.humidity = humidity;
     }
 }
 
-var forecast;
+var forecast = [];
 
 const openWeatheMapApiKey = '7b85f2bb86fc3cfd4942d30f29f7e19d';
 const city = 'Seattle';
@@ -25,7 +25,7 @@ fetchWeatherData(city, countryCode, openWeatheMapApiKey)
 
 // Function to fetch weather data from OpenWeatherMap API
 async function fetchWeatherData(city, countryCode, apiKey) {
-    const apiUrl = `http://api.openweathermap.org/data/2.5/forecast?q=${city},${countryCode}&units=metric&appid=${openWeatheMapApiKey}`;
+    const apiUrl = `http://api.openweathermap.org/data/2.5/forecast?q=${city},${countryCode}&units=imperial&appid=${openWeatheMapApiKey}`;
 
     try {
         const response = await fetch(apiUrl);
@@ -40,42 +40,76 @@ async function fetchWeatherData(city, countryCode, apiKey) {
 // Function to display weather forecast
 function displayForecast(forecastData) {
     if (!forecastData) {
-        console.error('No forecast data available.');
+        alert('There is no forcast available for that city.');
         return;
     }
 
-    console.log(forecastData.city.name);
-    
-    
     // Iterate through each forecast entry
     console.log(forecastData);
+    
+    forecast = [];
     forecastData.list.forEach(entry => {
         var day = new ForecastDay();
+        
         day.city = forecastData.city.name;
+        day.dateTime = dayjs(entry.dt_txt);
+        day.temp = entry.main.temp + "&#176;F";
+        day.wind = entry.wind.speed + " mph";
+        day.humidity = entry.main.humidity + "%";
+        day.conditions = entry.weather[0].main;
         
-        // select the weather at noon each day
-        var time = new Date(entry.dt_txt)
-        if (time.getHours() == 12){
-            day.date = entry.dt_txt;
-            day.temp = entry.main.temp;
-            day.wind = entry.wind.speed;
-            day.humidity = entry.main.humidity;
-            day.conditions = entry.weather[0].main;
-            console.log(day);
-         
-    
-        }
+        forecast.push(day);    
         
-
-        //$("#cityName").text(forecastData.city.name);
-
     });
+
+    // Select only six days 
+    var selectForecast = [5];
+    
+    for (var i =0 ; i <6 ; i++){
+        selectForecast[i] = getDayForecast( dayjs().add(i, 'day'));
+        //console.log( selectForecast[i]);
+    }
+    
+    // Update controls
+    $("#cityName").text(forecastData.city.name);
+    
+    var days = $(".dayDate");
+    var temp = $(".temp");
+    var wind = $(".wind");
+    var humitity = $(".temp");
+
+    
+    temp.each(function(index) {
+        $(this).text(selectForecast[index].temp);
+      });
+
+      wind.each(function(index) {
+        $(this).text(selectForecast[index].wind);
+      });
+
+      humitity.each(function(index) {
+        $(this).text(selectForecast[index].humitity);
+      });
+
+
+    
 }
 
+// select the forcast from noon for each day unless there is no noon then use last entry for that day
+function getDayForecast(dateMatch){
+    var dateCheck = dayjs(dateMatch);
+    var day = new ForecastDay();
+    
+    forecast.forEach(entry => {
+        if ( entry.dateTime.isSame(dateCheck, 'date')){
+            day = entry
+ 
+            if (entry.dateTime.hour() == 12) {
+                return day;
+            }
+        }
+    });
 
-this.city = city;
-this.conditions = conditions;
-this.date = date;
-this.temp = temp;
-this.wind = wind;
-this.humidity = humidity;
+    return day;
+
+}
