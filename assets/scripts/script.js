@@ -2,10 +2,10 @@
 // Global Declarations
 // -------------------------------------------------------------
 class ForecastDay {
-    constuctor( city, conditions, icon, date, temp, wind, humidity){
+    constuctor( city, conditions, iconUrl, date, temp, wind, humidity){
         this.city = city;
         this.conditions = conditions;
-        this.icon = icon;
+        this.iconUrl = iconUrl;
         this.dateTime = date;
         this.temp = temp;
         this.wind = wind;
@@ -56,8 +56,7 @@ function displayForecast(forecastData) {
         day.wind = entry.wind.speed + " mph";
         day.humidity = entry.main.humidity + "%";
         day.conditions =  entry.weather[0].description;
-        day.icon = `https://openweathermap.org/img/wn/${entry.weather[0].icon}@2x.png`;
-        //console.log( `https://openweathermap.org/img/wn/${entry.weather[0].icon}@2x.png` );
+        day.iconUrl = `https://openweathermap.org/img/wn/${entry.weather[0].icon}@2x.png`;
         
         forecast.push(day);    
         
@@ -84,8 +83,8 @@ function displayForecast(forecastData) {
       });
 
     icon.each(function(index) {
-        $(this).text(attr('src', selectForecast[index].icon));
-        console.log(selectForecast[index].icon);
+        $(this).attr('src', selectForecast[index].iconUrl);
+        console.log(selectForecast[index].iconUrl);
         
       });
 
