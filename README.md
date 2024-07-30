@@ -1,6 +1,6 @@
 # TroveWeather
 
-Check out the weather in other parts of the united statestheir work day
+Javascript sample project to check out the weather.
 
 ![Screenshot of Trove employee day scheduler](/assets/images/screenshot-app.png?raw=true "TrovePlaner")
 
